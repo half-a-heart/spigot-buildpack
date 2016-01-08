@@ -1,22 +1,32 @@
 #!/bin/sh
 
+
 # Set some variables
-minecraft_version=${MINECRAFT_VERSION:-"1.8.8"}
-minecraft_url="http://tcpr.ca/files/spigot/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar"
+buildtools_url="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 
 BP_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR=$1
 OPT_DIR=$BP_DIR/../opt/
 
 # Create required directories
-mkdir -p $BUILD_DIR/bin
+mkdir -p $BUILD_DIR/tmp $BUILD_DIR/bin
 
 # Download Spigot
-echo -n "-----> Installing Minecraft ${minecraft_version}... "
-curl —s $minecraft_url > $BUILD_DIR/minecraft.jar
+echo -n "--> Downloading BuildTools.jar"
+curl —s $buildtools_url > $BUILD_DIR/tmp/BuildTools.jar
+echo "done"
+
+# Building Spigot
+echo -n "--> Building Spigot"
+git config --global core.autocrlf input
+cd $BUILD_DIR/tmp
+java -jar minecraft/BuildTools.jar
 echo "done"
 
 # Ensure files required by the buildpack are in the right place
+echo "--> copying files"
+mv $BUILD_DIR/tmp/*.jar $BUILD_DIR/.
+rm -rf $BUILD_DIR/tmp/*
 
 [ ! -f $BUILD_DIR/minecraft ]   && cp $OPT_DIR/minecraft $BUILD_DIR/bin
 

@@ -1,13 +1,16 @@
 #!/bin/sh
 
-port=${1:-${PORT:-25566}}
-heap=“384m”
+#port=${1:-${PORT:-25566}}
+port=${1:-${PORT:-80}}
+heap_min=“512m”
+heap_max="1024m"
 
 echo "Starting: minecraft ${port}"
 echo "server-port=${port}" >> /app/server.properties
 
-eval "java -Xmx${heap} -Xms${heap} -jar minecraft.jar nogui &"
+eval "java -Xmx${heap_max} -Xms${heap_min} -jar spigot-1.8.8.jar nogui &"
 main_pid=$!
 
 trap "kill $main_pid" SIGTERM
 trap "kill -9 $main_pid; exit" SIGKILL
+
