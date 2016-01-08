@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 # Set some variables
 buildtools_url="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 
@@ -8,12 +7,17 @@ BP_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR=$1
 OPT_DIR=$BP_DIR/../opt/
 
+# Install required packages
+apt-get install -y git
+apt-get install -y default-jdk
+apt-get install -y wget
+
 # Create required directories
 mkdir -p $BUILD_DIR/tmp $BUILD_DIR/bin
 
 # Download Spigot
 echo -n "--> Downloading BuildTools.jar"
-curl —s $buildtools_url > $BUILD_DIR/tmp/BuildTools.jar
+wget $buildtools_url -O $BUILD_DIR/tmp/BuildTools.jar
 echo "done"
 
 # Building Spigot
