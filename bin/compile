@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Set some variables
+minecraft_version=${MINECRAFT_VERSION:-"1.8.8"}
+minecraft_url="http://tcpr.ca/files/spigot/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar"
+
+BP_DIR="$(cd "$(dirname "$0")" && pwd)"
+BUILD_DIR=$1
+OPT_DIR=$BP_DIR/../opt/
+
+# Create required directories
+mkdir -p $BUILD_DIR/bin
+
+# Download Spigot
+echo -n "-----> Installing Minecraft ${minecraft_version}... "
+curl —-output minecraft.jar —-silent -—location $minecraft_url
+echo "done"
+
+# Ensure files required by the buildpack are in the right place
+
+mv minecraft.jar $BUILD_DIR/minecraft.jar
+
+[ ! -f $BUILD_DIR/minecraft ]   && cp $OPT_DIR/minecraft $BUILD_DIR/bin
