@@ -13,7 +13,7 @@ mkdir -p $BUILD_DIR/bin
 
 # Download Spigot
 echo -n "-----> Installing Minecraft ${minecraft_version}... "
-curl —-output minecraft.jar —-silent -—location $minecraft_url
+curl —-output minecraft.jar —-silent -L $minecraft_url
 echo "done"
 
 # Ensure files required by the buildpack are in the right place
